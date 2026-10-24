@@ -1,0 +1,1 @@
+const fs=require('fs');let h=fs.readFileSync('outputs/尖山坑聖母宮-完整整合版.html','utf8').replace(/data:image\/[^;]+;base64,[A-Za-z0-9+/=]+/g,'[IMAGE]');const i=h.indexOf('<footer');console.log(h.slice(i,i+3800));
