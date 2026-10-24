@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>尖山坑聖母宮｜2D畫素風進階版網站</title>
+  <style>
+    :root {
+      --bg: #1f1020;
+      --bg2: #341626;
+      --panel: #6d2136;
+      --panel2: #4a1623;
+      --gold: #ffd465;
+      --gold2: #d6a53a;
+      --light: #fff4d2;
+      --accent: #ffed9b;
+      --danger: #cf4d4d;
+      --green: #74c27f;
+      --shadow: #12070c;
+      --sky: #5a2342;
+    }
+
+    * {
+      box-sizing: border-box;
+      image-rendering: pixelated;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--light);
+      font-family: "Courier New", monospace;
+      background:
+        linear-gradient(to bottom, #2b1430 0%, #43192a 45%, #24111e 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.03) 50%, transparent 50%);
+      background-size: 100% 4px;
+      opacity: 0.22;
+      z-index: 999;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .pixel-box {
+      border: 4px solid var(--shadow);
+      box-shadow:
+        0 0 0 4px var(--gold2),
+        0 0 0 8px var(--shadow);
+      background: var(--panel);
+    }
+
+    .pixel-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: #492300;
+      border: 3px solid var(--shadow);
+      box-shadow: 4px 4px 0 var(--shadow);
+      padding: 12px 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.08s ease;
+    }
+
+    .pixel-btn:hover {
+      transform: translate(-1px, -1px);
+    }
+
+    .pixel-btn.red {
+      background: var(--danger);
+      color: white;
+    }
+
+    .pixel-btn.green {
+      background: var(--green);
+      color: #11240f;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #441726;
+      border-bottom: 4px solid var(--gold2);
+      box-shadow: 0 4px 0 var(--shadow);
+    }
+
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .brand-title {
+      color: var(--gold);
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-shadow: 2px 2px 0 var(--shadow);
+    }
+
+    .brand-sub {
+      font-size: 0.82rem;
+      opacity: 0.95;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: var(--danger);
+      color: white;
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--gold2);
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .menu {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .menu a {
+      background: #8a2c46;
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--gold2);
+      padding: 8px 12px;
+      font-size: 0.95rem;
+    }
+
+    .hero-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pixel-stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.3;
+      background-image:
+        radial-gradient(#fff4d2 1px, transparent 1px),
+        radial-gradient(#ffd465 1px, transparent 1px);
+      background-size: 24px 24px, 36px 36px;
+      background-position: 0 0, 12px 12px;
+    }
+
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 36px 20px 28px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-left {
+      padding: 24px;
+      position: relative;
+    }
+
+    .chip {
+      display: inline-block;
+      margin-bottom: 14px;
+      background: var(--gold);
+      color: #4f2400;
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--shadow);
+      padding: 6px 10px;
+      font-weight: bold;
+    }
+
+    .hero-title {
+      font-size: 2.1rem;
+      color: var(--gold);
+      margin: 0 0 12px;
+      text-shadow: 3px 3px 0 var(--shadow);
+      line-height: 1.3;
+    }
+
+    .hero-desc {
+      margin: 12px 0;
+      font-size: 1rem;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .status-bar {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .stat {
+      background: var(--panel2);
+      padding: 12px;
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--shadow);
+      text-align: center;
+    }
+
+    .stat .label {
+      font-size: 0.8rem;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .stat .value {
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .hero-right {
+      padding: 18px;
+    }
+
+    .portrait {
+      background: #3b1425;
+      padding: 14px;
+      border: 4px solid var(--shadow);
+      box-shadow:
+        0 0 0 4px var(--gold2),
+        0 0 0 8px var(--shadow);
+      position: relative;
+    }
+
+    .portrait::before {
+      content: "聖母意象・示意圖";
+      position: absolute;
+      top: -12px;
+      left: 14px;
+      background: var(--gold);
+      color: #4f2400;
+      border: 3px solid var(--shadow);
+      padding: 3px 10px;
+      font-weight: bold;
+      box-shadow: 3px 3px 0 var(--shadow);
+    }
+
+    .portrait img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border: 4px solid var(--gold2);
+      filter: contrast(1.08) saturate(1.06);
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 26px 20px;
+    }
+
+    .section-title {
+      color: var(--gold);
+      font-size: 1.6rem;
+      margin: 0 0 18px;
+      text-shadow: 2px 2px 0 var(--shadow);
+    }
+
+    .section-sub {
+      margin: -8px 0 18px;
+      opacity: 0.95;
+    }
+
+    .intro-panel {
+      padding: 22px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      padding: 18px;
+      min-height: 180px;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-size: 1.08rem;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+    }
+
+    .timeline-item {
+      padding: 16px;
+      border-left: 8px solid var(--gold2);
+    }
+
+    .notice-board {
+      padding: 18px;
+    }
+
+    .notice-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .notice-list li {
+      background: var(--panel2);
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--shadow);
+      padding: 12px;
+    }
+
+    .notice-date {
+      color: var(--gold);
+      font-weight: bold;
+      display: inline-block;
+      margin-bottom: 6px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .gallery-item {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border: 4px solid var(--gold2);
+      margin-bottom: 10px;
+    }
+
+    .quest-panel {
+      padding: 22px;
+    }
+
+    .quest-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .quest {
+      background: var(--panel2);
+      padding: 14px;
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--shadow);
+    }
+
+    .quest strong {
+      color: var(--accent);
+    }
+
+    .blessing-panel {
+      padding: 24px;
+      text-align: center;
+    }
+
+    .blessing-result {
+      margin-top: 16px;
+      min-height: 60px;
+      padding: 14px;
+      background: var(--panel2);
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--shadow);
+      color: var(--accent);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .map-panel {
+      padding: 22px;
+    }
+
+    .map-box {
+      background: #3d1422;
+      border: 3px solid var(--shadow);
+      box-shadow: 3px 3px 0 var(--shadow);
+      padding: 18px;
+      line-height: 1.9;
+    }
+
+    .contact-panel {
+      padding: 22px;
+    }
+
+    .footer {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 20px 40px;
+      text-align: center;
+      color: #f6e7b8;
+    }
+
+    .small-note {
+      font-size: 0.92rem;
+      opacity: 0.95;
+    }
+
+    .top-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 100;
+      display: none;
+    }
+
+    @media (max-width: 960px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-3 {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .menu-toggle {
+        display: inline-block;
+      }
+
+      .menu {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 10px;
+      }
+
+      .menu.show {
+        display: flex;
+      }
+
+      .grid-3,
+      .grid-2,
+      .gallery,
+      .status-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: 1.6rem;
+      }
+
+      .brand-title {
+        font-size: 1.05rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav">
+      <div class="brand">
+        <div class="brand-title">尖山坑聖母宮</div>
+        <div class="brand-sub">JIANSHANKENG HOLY MOTHER TEMPLE - PIXEL EDITION</div>
+      </div>
+
+      <button class="menu-toggle" id="menuToggle">選單 MENU</button>
+
+      <div class="menu" id="menu">
+        <a href="#about">宮廟簡介</a>
+        <a href="#history">沿革</a>
+        <a href="#deity">神明介紹</a>
+        <a href="#notice">公告欄</a>
+        <a href="#events">活動任務</a>
+        <a href="#gallery">相簿</a>
+        <a href="#blessing">抽籤祈福</a>
+        <a href="#map">交通資訊</a>
+      </div>
+    </nav>
+  </header>
+
+  <div class="hero-wrap">
+    <div class="pixel-stars"></div>
+
+    <section class="hero">
+      <div class="hero-left pixel-box">
+        <div class="chip">PIXEL TEMPLE WEBSITE</div>
+        <h1 class="hero-title">尖山坑聖母宮<br>2D畫素風進階版網站</h1>
+        <p class="hero-desc">
+          歡迎來到尖山坑聖母宮。本網站以懷舊像素遊戲風格呈現，
+          將傳統信仰、宮廟文化與互動式網頁結合，打造獨特的參拜體驗。
+        </p>
+        <p class="hero-desc">
+          你之後可以把這些示範文字替換成真正的宮廟歷史、神明介紹、
+          活動資訊、地址與聯絡方式。
+        </p>
+
+        <div class="hero-buttons">
+          <a class="pixel-btn" href="#about">開始參觀</a>
+          <a class="pixel-btn red" href="fortune.html">開始求籤</a>
+        </div>
+
+        <div class="status-bar">
+          <div class="stat">
+            <div class="label">主祀神明</div>
+            <div class="value">聖母娘娘</div>
+          </div>
+          <div class="stat">
+            <div class="label">網站風格</div>
+            <div class="value">PIXEL 2D</div>
+          </div>
+          <div class="stat">
+            <div class="label">目前狀態</div>
+            <div class="value">展示版本</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="portrait">
+          <img src="deity.svg" alt="尖山坑聖母宮主祀神像">
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="section" id="about">
+    <h2 class="section-title">宮廟簡介</h2>
+    <p class="section-sub">TEMPLE INFO PANEL</p>
+    <div class="intro-panel pixel-box">
+      <p>
+        尖山坑聖母宮為地方信仰中心，提供信眾參香、祈福與參與歲時祭典。
+        本宮承載地方文化記憶，亦是居民重要的精神寄託。
+      </p>
+      <br>
+      <p>
+        目前內容為示範版本，你可以之後改成真正的宮廟介紹，例如：
+        建廟緣起、地方故事、信仰特色與歷年重要紀錄。
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="history">
+    <h2 class="section-title">沿革紀錄</h2>
+    <p class="section-sub">HISTORY LOG</p>
+    <div class="timeline">
+      <div class="timeline-item pixel-box">
+        <strong>【創建起源】</strong><br>
+        在此填入尖山坑聖母宮的創立背景、神蹟傳說或地方信仰起源。
+      </div>
+      <div class="timeline-item pixel-box">
+        <strong>【發展歷程】</strong><br>
+        可補充擴建整修、香火傳承、地方耆老參與等內容。
+      </div>
+      <div class="timeline-item pixel-box">
+        <strong>【文化意義】</strong><br>
+        可描述宮廟對社區、祭典文化、居民凝聚力的重要性。
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="deity">
+    <h2 class="section-title">神明介紹</h2>
+    <p class="section-sub">CHARACTER DATA</p>
+    <div class="grid-3">
+      <div class="card pixel-box">
+        <h3>主祀神明｜聖母娘娘</h3>
+        <p>
+          在此介紹聖母娘娘的神格、庇佑範圍、地方信仰角色及參拜意義。
+        </p>
+      </div>
+      <div class="card pixel-box">
+        <h3>配祀神明</h3>
+        <p>
+          這裡可加入陪祀神明介紹，例如福德正神、註生娘娘或其他神尊。
+        </p>
+      </div>
+      <div class="card pixel-box">
+        <h3>信仰特色</h3>
+        <p>
+          可說明本宮最具代表性的祭典、傳說、靈驗事蹟與文化特色。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="notice">
+    <h2 class="section-title">公告欄（以下日期與活動皆為原版範例）</h2>
+    <p class="section-sub">NOTICE BOARD</p>
+    <div class="notice-board pixel-box">
+      <ul class="notice-list">
+        <li>
+          <span class="notice-date">2026/10/25</span><br>
+          聖母祈安活動公告：請依現場流程進行參拜與祈福。
+        </li>
+        <li>
+          <span class="notice-date">2026/11/08</span><br>
+          宮廟清潔日：歡迎志工與信眾一同參與。
+        </li>
+        <li>
+          <span class="notice-date">2026/12/01</span><br>
+          年末酬神法會：詳細時程可再補入此處。
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="events">
+    <h2 class="section-title">年度活動任務</h2>
+    <p class="section-sub">TEMPLE QUESTS</p>
+    <div class="quest-panel pixel-box">
+      <div class="quest-list">
+        <div class="quest">
+          <strong>QUEST 01｜聖母聖誕慶典</strong><br>
+          可填入日期、祭典流程、祝壽活動與信眾參與方式。
+        </div>
+        <div class="quest">
+          <strong>QUEST 02｜平安遶境祈福</strong><br>
+          可填入遶境日期、路線、集合時間與注意事項。
+        </div>
+        <div class="quest">
+          <strong>QUEST 03｜誦經祈安法會</strong><br>
+          可填入誦經、消災、點燈與祈福內容。
+        </div>
+        <div class="quest">
+          <strong>QUEST 04｜志工服務招募</strong><br>
+          可填入香燈腳、整理環境、活動支援等志工資訊。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="gallery">
+    <h2 class="section-title">宮廟相簿</h2>
+    <p class="section-sub">PIXEL GALLERY</p>
+    <div class="gallery">
+      <div class="gallery-item pixel-box">
+        <img src="deity.svg" alt="主祀神像">
+        <div>主祀神像</div>
+      </div>
+      <div class="gallery-item pixel-box">
+        <img src="deity.svg" alt="正殿風貌">
+        <div>正殿風貌</div>
+      </div>
+      <div class="gallery-item pixel-box">
+        <img src="deity.svg" alt="祭典紀錄">
+        <div>祭典紀錄</div>
+      </div>
+      <div class="gallery-item pixel-box">
+        <img src="deity.svg" alt="信仰文化">
+        <div>信仰文化</div>
+      </div>
+    </div>
+    <p class="small-note" style="margin-top: 12px;">
+      ※ 目前示範先重複使用同一張圖片，你之後可以改成廟埕、正殿、遶境、活動照片。
+    </p>
+  </section>
+
+  <section class="section" id="blessing"><h2 class="section-title">互動求籤</h2><div class="blessing-panel pixel-box"><p>靜心 → 抽籤 → 擲筊 → 閱讀籤詩</p><p>目前僅為展示模擬。範例籤號、籤等與文字均非本宮正式典籍。</p><a class="pixel-btn" href="fortune.html">開始求籤</a></div></section>
+
+  <section class="section" id="map">
+    <h2 class="section-title">交通與聯絡資訊</h2>
+    <p class="section-sub">MAP / CONTACT</p>
+    <div class="grid-2">
+      <div class="map-panel pixel-box">
+        <h3 style="color: var(--accent); margin-top: 0;">宮廟資訊</h3>
+        <div class="map-box">
+          宮廟名稱：尖山坑聖母宮<br>
+          地址：請填入正式地址<br>
+          電話：請填入聯絡電話<br>
+          開放時間：請填入參拜時間<br>
+          Facebook／LINE：可自行加入
+        </div>
+      </div>
+
+      <div class="contact-panel pixel-box">
+        <h3 style="color: var(--accent); margin-top: 0;">導航功能</h3>
+        <div class="map-box">
+          你可以把這裡換成 Google Maps 連結，<br>
+          或之後直接嵌入地圖。
+          <br><br>
+          <a class="pixel-btn red" href="https://maps.google.com" target="_blank">
+            開啟地圖導航
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 尖山坑聖母宮｜2D畫素風進階版網站</p>
+    <p class="small-note">本頁目前為示範版，可替換為正式宮廟資料與實際照片。</p>
+  </footer>
+
+  <button class="pixel-btn top-btn" id="topBtn">TOP</button>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const menu = document.getElementById("menu");
+    const topBtn = document.getElementById("topBtn");
+
+    menuToggle.addEventListener("click", () => {
+      menu.classList.toggle("show");
+    });
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        topBtn.style.display = "inline-block";
+      } else {
+        topBtn.style.display = "none";
+      }
+    });
+
+    topBtn.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  </script>
+</body>
+</html>

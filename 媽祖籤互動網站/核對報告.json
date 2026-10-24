@@ -1,0 +1,20 @@
+{
+  "count": 100,
+  "missing_numbers": [],
+  "duplicate_numbers": [],
+  "empty_fields": [],
+  "field_counts": {
+    "original": 100,
+    "zh": 100,
+    "en": 100,
+    "ja": 100
+  },
+  "extra_entries": [
+    {
+      "label": "頭籤",
+      "zh": "得此頭籤者，代表百事順利、大吉",
+      "en": "This divination tells of the greatest possible good fortune, shining most auspiciously on every aspect of your life, provided only that you hold sincerely true to your faith.",
+      "ja": ""
+    }
+  ]
+}
